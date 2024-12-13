@@ -1,101 +1,54 @@
+import { getBlogs } from "@/libs/blog";
+import { IBlog } from "@/types/blog";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const data: IBlog[] = await getBlogs();
+  console.log(data);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex justify-center items-center p-8 bg-gray-100 min-h-screen">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-lg mx-auto">
+        {data.map((item) => (
+          <div
+            key={item.title}
+            className="w-full max-w-xs h-[450px] p-4 bg-white shadow-lg rounded-lg text-center text-black border border-gray-200 flex flex-col items-center relative"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <div className="w-full h-3/5 flex justify-center mb-4">
+              <Image
+                src={item.thumbnail}
+                alt="thumbnail"
+                width={200}
+                height={200}
+                className="rounded-xl object-cover w-full h-full"
+              />
+            </div>
+            <h3 className="text-lg font-semibold mb-2 flex-grow">
+              {item.title}
+            </h3>
+            <div className="flex flex-col items-center gap-2 mb-4">
+              <img
+                src="https://blog-mu-cyan-36.vercel.app/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2Fwcb4iy28ttmy%2FKej4HeqoPcIIMyqwnqfOH%2F82398ce5102f544bab02265e174261ac%2FMuslimah_Cartoon_With_Brown_Hijab__Cartoon_Clipart__Hijab_Clipart__Muslim_Cartoon_Hijab_PNG_Transparent_Clipart_Image_and_P.jfif&w=96&q=75"
+                alt="Author Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <div className="text-center">
+                <p className="text-sm font-semibold">{item.user.username}</p>
+                <p className="text-xs text-gray-500">{item.user.email}</p>
+              </div>
+            </div>
+            <Link
+              href={`/blog/${item.slug}`}
+              className="absolute bottom-4 left-4 right-4 bg-teal-500 rounded-xl px-4 py-2 text-white hover:bg-teal-600 transition-all duration-200 text-sm"
+            >
+              Read more
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
